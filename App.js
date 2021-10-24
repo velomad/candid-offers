@@ -1,21 +1,47 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import "react-native-gesture-handler";
+import React, { useState } from "react";
+import AppLoading from "expo-app-loading";
+import { NavigationContainer } from "@react-navigation/native";
+import AppNavigator from "./navigation/AppNavigator";
+import AuthNavigator from "./navigation/AuthNavigator";
+import authStorage from "./auth/storage";
+import AuthContext from "./auth/context";
+import Store from "./store";
+import { Provider } from "react-redux";
 
-export default function App() {
+const App = () => {
+  const [user, setUser] = useState();
+  const [isReady, setIsReady] = useState(false);
+  const [fr, sfr] = useState(false);
+
+  const restoreUser = async () => {
+    const user = await authStorage.getUser();
+    if (user) setUser(user);
+  };
+
+
+  if (!isReady)
+    return (
+      <>
+        <AppLoading
+          startAsync={restoreUser}
+          onFinish={() => setIsReady(true)}
+          onError={console.warn}
+        />
+      </>
+    );
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AuthContext.Provider value={{ user, setUser }}>
+      <Provider store={Store}>
+        <NavigationContainer>
+          {user ? <AppNavigator /> : <AuthNavigator />}
+        </NavigationContainer>
+      </Provider>
+    </AuthContext.Provider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default () => {
+  return <App />;
+};
