@@ -11,7 +11,6 @@ import { connect } from "react-redux";
 import { COLORS, SIZES, FONTS } from "../constants";
 import { Card } from "../components";
 import { setTopOffers } from "../store/action";
-import * as Icon from "@expo/vector-icons";
 import { icici } from "../constants/images";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -48,6 +47,7 @@ const MainLayout = ({
   }, [isTopOffers]);
 
   const handleOfferDetail = (data) => {
+    console.log('navigation', data);
     navigation.navigate("offerdetails", { offerDetails: data });
   };
 
@@ -104,7 +104,8 @@ const MainLayout = ({
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => {
           return (
-            <TouchableOpacity activeOpacity={1} onPress={() => handleOfferDetail(item)}>
+            // <TouchableOpacity activeOpacity={1} onPress={() => handleOfferDetail(item)}>
+            <TouchableOpacity activeOpacity={1}>
               <View
                 style={{
                   borderRadius: 10,
@@ -221,10 +222,11 @@ const styles = StyleSheet.create({
   offerContainer: {
     marginTop: "6%",
     margin: "8%",
+    minHeight: SIZES.width / 4,
   },
   offerImageStyle: {
     width: SIZES.width / 4,
-    height: SIZES.width / 4,
+    minHeight: SIZES.width / 4,
     borderRadius: 10,
   },
 });

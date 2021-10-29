@@ -276,7 +276,7 @@ const Account = (props) => {
       >
         <Text style={{ ...FONTS.body2, color: COLORS.gray }}>Contact Us</Text>
         <Text style={{ ...FONTS.body4, color: COLORS.gray, marginTop: "5%" }}>
-          support@xyz.com
+          info@candidleads.com
         </Text>
       </View>
     </ScrollView>

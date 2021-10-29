@@ -41,7 +41,7 @@ const Item = ({ itemdata }) => (
           fontWeight: "700",
         }}
       >
-        {itemdata.user.name}
+        {itemdata.User.name}
       </Text>
 
       <Text
@@ -51,7 +51,7 @@ const Item = ({ itemdata }) => (
           fontWeight: "600",
         }}
       >
-        Level {itemdata.user.levelId}
+        Level {itemdata.User.levelId}
       </Text>
     </View>
     <View style={{ minWidth: SIZES.width / 20 }}>
@@ -63,7 +63,7 @@ const Item = ({ itemdata }) => (
           textAlign: 'right'
         }}
       >
-        &#8377;{itemdata.user.stats.totalEarnings}
+        &#8377;{itemdata.User.stats.totalEarnings}
       </Text>
     </View>
     <View style={{ minWidth: SIZES.width / 20 }}>
@@ -74,7 +74,7 @@ const Item = ({ itemdata }) => (
           fontWeight: "700",
         }}
       >
-        &#8377;{itemdata.user.stats.totalEarnings / 100 * 10}
+        &#8377;{itemdata.User.stats.totalEarnings / 100 * 10}
       </Text>
     </View>
   </View>
@@ -88,8 +88,9 @@ const Network = (props) => {
   const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
+    console.log('props.UserProfileData.result.uniqueCode',props.UserProfileData);
     fetchUserNetWork();
-  }, [props.userProfileData.result.uniqueCode]);
+  }, []);
 
   const onRefresh = () => {
     setIsFetching(true);
@@ -99,14 +100,14 @@ const Network = (props) => {
 
   const fetchUserNetWork = async () => {
     try {
-      const result = await customAxios.get(`/user/network/${props.userProfileData.result.uniqueCode}`);
+      const result = await customAxios.get(`/User/network`);
       setNetWorkDetails(result.data.result);
       setNetWorkNetworkLength(result.data.result.length);
       let friendEarningtotal = 0;
       let yourEarningtotal = 0;
       result.data.result.map((el, index) => {
-        friendEarningtotal += Number(el.user.stats.totalEarnings);
-        yourEarningtotal += Number(el.user.stats.totalEarnings / 100 * 10);
+        friendEarningtotal += Number(el.User.stats.totalEarnings);
+        yourEarningtotal += Number(el.User.stats.totalEarnings / 100 * 10);
       });
       setFriendEarningTotal(friendEarningtotal);
       setYourEarningTotal(yourEarningtotal);
@@ -121,7 +122,7 @@ const Network = (props) => {
   );
 
   const onCopy = () => {
-    let str = props.userProfileData.result.uniqueCode.toString();
+    let str = props.UserProfileData.result.uniqueCode.toString();
     Clipboard.setString(str);
     ToastAndroid.showWithGravityAndOffset(
       "Text Copied",
@@ -177,7 +178,7 @@ const Network = (props) => {
                 size={SIZES.width / 25}
                 color={COLORS.white}
               />
-              <Text style={styles.uniqueCode}>{props.userProfileData.result.uniqueCode}</Text>
+              <Text style={styles.uniqueCode}>{props.UserProfileData.result.uniqueCode}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -361,7 +362,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ user }) => ({
-  userProfileData: user.profile,
+  UserProfileData: user.profile,
 });
 
 export default connect(mapStateToProps)(Network);

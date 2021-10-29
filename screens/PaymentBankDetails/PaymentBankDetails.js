@@ -9,6 +9,8 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Modal from "react-native-modal";
+
 import { COLORS, FONTS, SIZES } from "../../constants";
 import {
   CustomButton,
@@ -21,6 +23,8 @@ import { connect } from "react-redux";
 
 const PaymentBankDetails = (props) => {
   const [inputValue, setInputValue] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMsg, setModalMsg] = useState('');
 
   const handleChange = (e) => {
     const { name, text } = e;
@@ -35,9 +39,19 @@ const PaymentBankDetails = (props) => {
   console.log(props.route.params)
 
   const handleAddDetailsPress = async () => {
-    await props.addUserPaymentDetails(inputValue, operation);
-    props.navigation.goBack();
-    props.getUserProfile();
+    if (!!inputValue.accountNumber && inputValue.reenteracctnum && inputValue.ifscCode) {
+      if (inputValue.accountNumber == inputValue.reenteracctnum) {
+        await props.addUserPaymentDetails(inputValue, operation);
+        props.navigation.goBack();
+        props.getUserProfile();
+      } else {
+        setModalMsg("Account numbers not matching.");
+        setModalVisible(true);
+      }
+    } else {
+      setModalMsg("All details are required.");
+      setModalVisible(true);
+    }
   };
 
   return (
@@ -46,6 +60,35 @@ const PaymentBankDetails = (props) => {
         barStyle="dark-content"
         backgroundColor={COLORS.white}
       />
+      <Modal
+        useNativeDriverForBackdrop={true}
+        useNativeDriver={true}
+        onBackdropPress={() => setModalVisible(false)}
+        onBackButtonPress={() => setModalVisible(false)}
+        hardwareAccelerated={true}
+        isVisible={modalVisible}
+      >
+        <View
+          style={{
+            borderRadius: 20,
+            backgroundColor: COLORS.white,
+            height: "20%",
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              flexDirection: "column",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <Text style={{ ...FONTS.body5, color: COLORS.primaryDark }}>
+              {modalMsg}
+            </Text>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.formContainer}>
         <View>
           <InputField

@@ -10,3 +10,5 @@ export { default as background } from "../assets/images/background.png";
 export { default as test } from "../assets/images/test.jpg";
 export { default as icici } from "../assets/banners/icici.jpg";
 export { default as party } from "../assets/images/party.png";
+export { default as noCash } from "../assets/images/no-cash.png";
+

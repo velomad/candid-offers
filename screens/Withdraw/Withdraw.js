@@ -10,12 +10,13 @@ import { COLORS, FONTS } from "../../constants";
 import { getUserProfile } from "../../store/action";
 import Modal from "react-native-modal";
 import customAxios from "../../utils/interceptor";
-import { party } from "../../constants/images";
+import { party, noCash } from "../../constants/images";
 
 const Withdraw = (props) => {
   const [inputValue, setInputValue] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [modalVisiblePayMentExced, setModalVisiblePayMentExced] = useState(false);
+  const [modalMsg, setModalMsg] = useState('');
   useEffect(() => {
     props.getUserProfile();
   }, []);
@@ -23,10 +24,24 @@ const Withdraw = (props) => {
   const data = props.data.result;
 
   const handleWithdrawAmount = async () => {
-    Keyboard.dismiss();
-    const result = await customAxios.post("/payment/withdraw", inputValue);
-    props.getUserProfile();
-    setModalVisible(true);
+    if (inputValue.amount < 500) {
+      setModalMsg('Entered amount should be equal to or more than 500.')
+      setModalVisiblePayMentExced(true);
+    }
+    else if (inputValue.amount > data.wallet.balance) {
+      setModalMsg('Entered amount is greater than current balance.')
+      setModalVisiblePayMentExced(true);
+    }
+    else {
+      Keyboard.dismiss();
+      try {
+        const result = await customAxios.post("/payment/withdraw", inputValue);
+        props.getUserProfile();
+      } catch (e) {
+        console.log('WithDraw===>', e);
+      }
+      setModalVisible(true);
+    }
   };
 
   return (
@@ -35,6 +50,38 @@ const Withdraw = (props) => {
         barStyle="dark-content"
         backgroundColor={COLORS.white}
       />
+
+      <Modal
+        useNativeDriverForBackdrop={true}
+        useNativeDriver={true}
+        onBackdropPress={() => setModalVisiblePayMentExced(false)}
+        onBackButtonPress={() => setModalVisiblePayMentExced(false)}
+        hardwareAccelerated={true}
+        isVisible={modalVisiblePayMentExced}
+      >
+        <View
+          style={{
+            borderRadius: 20,
+            backgroundColor: COLORS.white,
+            height: "20%",
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              flexDirection: "column",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <Image source={noCash} />
+            <Text style={{ ...FONTS.body5, color: COLORS.primaryDark }}>
+              {modalMsg}
+            </Text>
+          </View>
+        </View>
+      </Modal>
+
 
       <Modal
         useNativeDriverForBackdrop={true}
@@ -143,7 +190,7 @@ const Withdraw = (props) => {
             width={"50%"}
             height={20}
             backgroundColor={COLORS.lightGray}
-            type="default"
+            type="number-pad"
             value={inputValue.amount}
             onChange={(e) => setInputValue({ [e.name]: e.text })}
           />

@@ -27,12 +27,12 @@ const Header = (props) => {
           {props.userProfileData && props.userProfileData.result.level.name}
         </Text>
       </View>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         activeOpacity={1}
         onPress={() => props.navigation.navigate("notification")}
       >
         <FontAwesome5 name="bell" size={SIZES.width / 20} color="white" />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

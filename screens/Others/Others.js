@@ -63,12 +63,29 @@ const Others = (props) => {
                     <View style={styles.infoIcon}>
                       <Tooltip
                         isVisible={offerID == el.id}
-                        content={<Text> You will receive the payment in {el.reportingDays} working days</Text>}
+                        content={
+                          <Text
+                            style={{
+                              ...FONTS.body5,
+                              color: COLORS.primaryDark,
+                            }}
+                          >
+                            {" "}
+                            You will receive the payment in {
+                              el.reportingDays
+                            }{" "}
+                            working days
+                          </Text>
+                        }
                         placement="bottom"
                         onClose={() => handleToolTipClose()}
                       >
                         <View>
-                          <Ionicons name="information-circle" size={22} color={COLORS.primary} />
+                          <Ionicons
+                            name="information-circle"
+                            size={22}
+                            color={COLORS.primary}
+                          />
                         </View>
                       </Tooltip>
                     </View>
@@ -77,9 +94,14 @@ const Others = (props) => {
                       style={styles.infoIcon}
                     >
                       <View>
-                        <Ionicons name="information-circle" size={22} color={COLORS.primary} />
+                        <Ionicons
+                          name="information-circle"
+                          size={22}
+                          color={COLORS.primary}
+                        />
                       </View>
                     </TouchableOpacity>
+
                     <Text
                       style={{
                         ...FONTS.body3,
@@ -157,7 +179,7 @@ const styles = StyleSheet.create({
   maincard: {
     marginTop: SIZES.width / 7,
     alignItems: "center",
-    backgroundColor: COLORS.primaryLight,
+    backgroundColor: COLORS.lightGray,
     marginHorizontal: SIZES.width / 15,
     borderRadius: 7,
   },
@@ -180,11 +202,11 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   infoIcon: {
-    color: '#000',
+    color: "#000",
     position: "absolute",
     right: SIZES.width / 40,
     top: SIZES.height / 110,
-  }
+  },
 });
 
 const mapStateToProps = ({ offers }) => ({
